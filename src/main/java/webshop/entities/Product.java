@@ -21,6 +21,6 @@ public class Product {
     private Long id;
     @Column(name = "title")
     private String title;
-    @Column(name = "prce")
+    @Column(name = "price")
     private int price;
 }
