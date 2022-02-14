@@ -17,5 +17,18 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
         });
     }
 
+    $scope.loadCartProducts = function () {
+        $http.get('http://localhost:8189/webshop/api/v1/products/cart').then(function (response) {
+            $scope.cartProductsList = response.data;
+        });
+    }
+
+    $scope.addProductById = function (productId) {
+        $http.get('http://localhost:8189/webshop/api/v1/products/cart/' + productId).then(function (response) {
+            $scope.loadCartProducts();
+        });
+    }
+
     $scope.loadProducts();
+    $scope.loadCartProducts();
 });
