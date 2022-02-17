@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import webshop.entities.Product;
+import webshop.exceptions.ResourceNotFoundException;
 import webshop.services.ProductService;
 
 import java.util.List;
@@ -24,7 +25,8 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public Product findProductById(@PathVariable Long id) {
-        return productService.findById(id).get();
+        Product p = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Продукт не найден, id: " + id));
+        return p;
     }
 
     @DeleteMapping("/{id}")
