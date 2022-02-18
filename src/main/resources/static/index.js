@@ -29,6 +29,12 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
         });
     }
 
+    $scope.clearCart = function () {
+        $http.get('http://localhost:8189/webshop/api/v1/cart/clear').then(function (response) {
+            $scope.loadCart();
+        });
+    }
+
     $scope.loadProducts();
     $scope.loadCart();
 });

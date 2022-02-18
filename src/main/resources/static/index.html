@@ -43,17 +43,20 @@
             <td>Название</td>
             <td>Количество</td>
             <td>Цена</td>
+            <td></td>
         </tr>
         <tbody>
         <tr ng-repeat="item in cart.items">
             <td>{{item.productTitle}}</td>
             <td>{{item.quantity}}</td>
             <td>{{item.pricePerProduct + ' x ' + item.quantity + ' = ' + item.price}}</td>
+            <td></td>
         </tr>
         <tr>
             <td>Итого</td>
             <td></td>
             <td>{{cart.totalPrice}}</td>
+            <td><button type="button" class="btn btn-danger" ng-click="clearCart()">Очистить корзину</button></td>
         </tr>
         </tbody>
     </table>
