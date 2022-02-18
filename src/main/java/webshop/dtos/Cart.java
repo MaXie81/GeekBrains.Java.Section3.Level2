@@ -20,8 +20,15 @@ public class Cart {
         return Collections.unmodifiableList(items);
     }
 
-    public void add(Product product) { // TODO: Доработать в ДЗ
-        items.add(new CartItem(product.getId(), product.getTitle(), 1, product.getPrice(), product.getPrice()));
+    public void add(Product product) {
+        CartItem cartItem = items.stream()
+                .filter(item -> item.getProductId() == product.getId())
+                .findFirst()
+                .orElse(new CartItem(product.getId(), product.getTitle(), 0, product.getPrice(), 0));
+
+        if (cartItem.getQuantity() == 0) items.add(cartItem);
+
+        cartItem.inc();
         recalculate();
     }
 
