@@ -10,19 +10,19 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
     <script src="index.js"></script>
-    <title>Web Shop</title>
 </head>
 
 <body>
 
 <div class="container" ng-controller="indexController">
-    <h1>Магазин</h1>
+    <h1>Market</h1>
+
     <h3>Список товаров</h3>
     <table class="table table-hover" cellpadding="0" cellspacing="0">
         <tr>
-            <td class="col-1">ID</td>
-            <td class="col-2">Название</td>
-            <td class="col-2">Цена</td>
+            <td>ID</td>
+            <td>Название</td>
+            <td>Цена</td>
             <td></td>
         </tr>
         <tbody>
@@ -31,10 +31,29 @@
             <td>{{p.title}}</td>
             <td>{{p.price}}</td>
             <td>
-                <button type="button" class="btn btn-primary" ng-click="showProductInfo(p.id)">Подробнее</button>
-<!--                <button type="button" class="btn btn-success" ng-click="addProductById(p.id)">В корзину</button>-->
-                <button type="button" class="btn btn-danger" ng-click="deleteProductById(p.id)">Удалить</button>
+                <button type="button" class="btn btn-primary" ng-click="addToCart(p.id)">Добавить в корзину</button>
             </td>
+        </tr>
+        </tbody>
+    </table>
+    <p></p>
+    <h3>Корина</h3>
+    <table class="table table-hover" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>Название</td>
+            <td>Количество</td>
+            <td>Цена</td>
+        </tr>
+        <tbody>
+        <tr ng-repeat="item in cart.items">
+            <td>{{item.productTitle}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{item.pricePerProduct + ' x ' + item.quantity + ' = ' + item.price}}</td>
+        </tr>
+        <tr>
+            <td>Итого</td>
+            <td></td>
+            <td>{{cart.totalPrice}}</td>
         </tr>
         </tbody>
     </table>
