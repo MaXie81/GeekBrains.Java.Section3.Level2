@@ -122,6 +122,16 @@ angular
                     );
                 };
 
+            $scope.sendOrder =
+                function () {
+                    $http.post('http://localhost:8189/webshop/api/v1/orders')
+                    .then(
+                        function (response) {
+                            $scope.clearCart();
+                        }
+                    );
+                };
+
             $scope.loadProducts();
             $scope.loadCart();
 
