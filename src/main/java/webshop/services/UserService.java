@@ -32,7 +32,7 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    private Optional<User> findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
