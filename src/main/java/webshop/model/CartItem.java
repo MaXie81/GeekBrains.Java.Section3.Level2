@@ -1,4 +1,4 @@
-package webshop.dtos;
+package webshop.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,8 +14,8 @@ public class CartItem {
     private int pricePerProduct;
     private int price;
 
-    public void inc() {
-        price += pricePerProduct;
-        quantity += 1;
+    public void changeQuantity(int delta) {
+        quantity += delta;
+        price = pricePerProduct * quantity;
     }
 }

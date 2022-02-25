@@ -1,4 +1,4 @@
-package webshop.dtos;
+package webshop.model;
 
 import lombok.Data;
 import webshop.entities.Product;
@@ -21,20 +21,26 @@ public class Cart {
     }
 
     public void add(Product product) {
-        CartItem cartItem = items.stream()
-                .filter(item -> item.getProductId() == product.getId())
-                .findFirst()
-                .orElse(new CartItem(product.getId(), product.getTitle(), 0, product.getPrice(), 0));
-
-        if (cartItem.getQuantity() == 0) items.add(cartItem);
-
-        cartItem.inc();
+        for (CartItem item : items) {
+            if (product.getId().equals(item.getProductId())) {
+                item.changeQuantity(1);
+                recalculate();
+                return;
+            }
+        }
+        items.add(new CartItem(product.getId(), product.getTitle(), 1, product.getPrice(), product.getPrice()));
         recalculate();
+    }
+
+    public void remove(Long productId) {
+        if (items.removeIf(item -> item.getProductId().equals(productId))) {
+            recalculate();
+        }
     }
 
     public void clear() {
         items.clear();
-        recalculate();
+        totalPrice = 0;
     }
 
     private void recalculate() {

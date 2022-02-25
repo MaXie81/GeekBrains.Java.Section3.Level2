@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import webshop.dtos.Cart;
+import webshop.model.Cart;
 import webshop.services.CartService;
 
 @RestController
@@ -19,13 +19,18 @@ public class CartController {
         cartService.add(id);
     }
 
-    @GetMapping
-    public Cart getCurrentCart() {
-        return cartService.getCurrentCart();
-    }
-
     @GetMapping("/clear")
     public void clearCart() {
         cartService.clear();
+    }
+
+    @GetMapping("/remove/{id}")
+    public void removeFromCart(@PathVariable Long id) {
+        cartService.remove(id);
+    }
+
+    @GetMapping
+    public Cart getCurrentCart() {
+        return cartService.getCurrentCart();
     }
 }

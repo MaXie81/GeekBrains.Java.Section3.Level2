@@ -2,9 +2,9 @@ package webshop.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import webshop.dtos.Cart;
 import webshop.entities.Product;
 import webshop.exceptions.ResourceNotFoundException;
+import webshop.model.Cart;
 
 import javax.annotation.PostConstruct;
 
@@ -28,6 +28,11 @@ public class CartService {
         tempCart.add(product);
     }
 
-    public  void clear() {tempCart.clear();}
-}
+    public void remove(Long productId) {
+        tempCart.remove(productId);
+    }
 
+    public void clear() {
+        tempCart.clear();
+    }
+}
