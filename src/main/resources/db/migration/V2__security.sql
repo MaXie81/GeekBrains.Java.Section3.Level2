@@ -1,12 +1,12 @@
 create table users(
-    id         bigserial primary key,
-    username   varchar(36) not null,
-    password   varchar(80) not null
+    id         bigserial    primary key,
+    username   varchar(36)  not null,
+    password   varchar(80)  not null
 );
 
 create table roles(
-    id         bigserial primary key,
-    name       varchar(50) not null
+    id         bigserial    primary key,
+    name       varchar(50)  not null
 );
 
 create table users_roles(
