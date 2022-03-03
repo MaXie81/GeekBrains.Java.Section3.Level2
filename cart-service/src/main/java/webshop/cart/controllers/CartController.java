@@ -1,6 +1,7 @@
 package webshop.cart.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import webshop.cart.services.CartService;
 @RestController
 @RequestMapping("/api/v1/cart")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class CartController {
     private final CartService cartService;
     private final CartConverter cartConverter;

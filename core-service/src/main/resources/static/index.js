@@ -84,7 +84,7 @@ angular
 
             $scope.removeFromCart =
                 function (productId) {
-                    $http.get('http://localhost:8189/webshop/api/v1/cart/remove/' + productId)
+                    $http.get('http://localhost:8190/webshop-cart/api/v1/cart/remove/' + productId)
                     .then(
                         function (response) {
                             $scope.loadCart();
@@ -94,7 +94,7 @@ angular
 
             $scope.clearCart =
                 function () {
-                    $http.get('http://localhost:8189/webshop/api/v1/cart/clear')
+                    $http.get('http://localhost:8190/webshop-cart/api/v1/cart/clear')
                     .then(
                         function (response) {
                             $scope.loadCart();
@@ -104,7 +104,7 @@ angular
 
             $scope.addToCart =
                 function (productId) {
-                    $http.get('http://localhost:8189/webshop/api/v1/cart/add/' + productId)
+                    $http.get('http://localhost:8190/webshop-cart/api/v1/cart/add/' + productId)
                     .then(
                         function (response) {
                             $scope.loadCart();
@@ -114,7 +114,7 @@ angular
 
             $scope.loadCart =
                 function () {
-                    $http.get('http://localhost:8189/webshop/api/v1/cart')
+                    $http.get('http://localhost:8190/webshop-cart/api/v1/cart')
                     .then(
                         function (response) {
                             $scope.cart = response.data;

@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import webshop.core.dtos.JwtRequest;
-import webshop.core.dtos.JwtResponse;
-import webshop.core.dtos.StringResponse;
+import shop.api.JwtRequest;
+import shop.api.JwtResponse;
+import shop.api.StringResponse;
 import webshop.core.services.UserService;
 import webshop.core.utils.JwtTokenUtil;
 
