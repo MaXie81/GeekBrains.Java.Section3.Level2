@@ -1,7 +1,7 @@
-package webshop.core.model;
+package webshop.cart.model;
 
 import lombok.Data;
-import webshop.core.entities.Product;
+import shop.api.ProductDto;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +20,7 @@ public class Cart {
         return Collections.unmodifiableList(items);
     }
 
-    public void add(Product product) {
+    public void add(ProductDto product) {
         for (CartItem item : items) {
             if (product.getId().equals(item.getProductId())) {
                 item.changeQuantity(1);

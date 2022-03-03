@@ -1,4 +1,4 @@
-package webshop.core.model;
+package webshop.cart.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
