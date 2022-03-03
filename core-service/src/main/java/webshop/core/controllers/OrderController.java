@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import webshop.core.exceptions.ResourceNotFoundException;
+import shop.api.ResourceNotFoundException;
 import webshop.core.services.OrderService;
 import webshop.core.services.UserService;
 import webshop.core.entities.User;
