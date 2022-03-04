@@ -7,6 +7,7 @@ import shop.api.CartDto;
 import webshop.core.entities.Order;
 import webshop.core.entities.OrderItem;
 import webshop.core.entities.User;
+import webshop.core.integrations.CartServiceIntegration;
 import webshop.core.repositories.OrderRepository;
 
 import java.util.stream.Collectors;
@@ -16,10 +17,11 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final ProductService productService;
     private final OrderRepository orderRepository;
+    private final CartServiceIntegration cartServiceIntegration;
 
     @Transactional
     public void createOrder(User user) {
-        CartDto cartDto = null; // cartServiceIntegration.getCurrentCart(); тут вы получите ее из карт МС
+        CartDto cartDto = cartServiceIntegration.getCart();
 
         Order order = new Order();
         order.setUser(user);
