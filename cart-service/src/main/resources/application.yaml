@@ -2,3 +2,5 @@ server:
   port: 8190
   servlet:
     context-path: /webshop-cart
+url:
+  core-service: http://localhost:8189/webshop/api/v1/products/
