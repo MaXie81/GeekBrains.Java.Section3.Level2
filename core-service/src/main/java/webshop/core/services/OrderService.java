@@ -26,13 +26,14 @@ public class OrderService {
         Order order = new Order();
         order.setUser(user);
         order.setTotalPrice(cartDto.getTotalPrice());
-        order.setItems(cartDto.getItems().stream().map(
-                cartItem -> new OrderItem(
-                        productService.findById(cartItem.getProductId()).get(),
-                        order,
-                        cartItem.getQuantity(),
-                        cartItem.getPricePerProduct(),
-                        cartItem.getPrice()
+        order.setItems(cartDto.getItems().stream()
+                .map(
+                    cartItem -> new OrderItem(
+                            productService.findById(cartItem.getProductId()).get(),
+                            order,
+                            cartItem.getQuantity(),
+                            cartItem.getPricePerProduct(),
+                            cartItem.getPrice()
                 )
         ).collect(Collectors.toList()));
         orderRepository.save(order);
