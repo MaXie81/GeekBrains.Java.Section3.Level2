@@ -21,3 +21,5 @@ spring:
 jwt:
   secret: F65hgG#*FGF3r45&^SFertD345Sert%FDF#G345j234fguygwe54f87t*Tgf
   lifetime: 36000000
+url:
+  cart-service: http://localhost:8190/webshop-cart/api/v1/cart/
