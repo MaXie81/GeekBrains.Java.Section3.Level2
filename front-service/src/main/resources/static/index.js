@@ -12,7 +12,7 @@ angular
         ) {
             $scope.tryToAuth =
                 function () {
-                    $http.post('http://localhost:8189/webshop/auth', $scope.user)
+                    $http.post('http://localhost:5555/auth/auth', $scope.user)
                     .then(
                         function successCallback(response) {
                             if (response.data.token) {
@@ -52,19 +52,9 @@ angular
                     }
                 };
 
-            $scope.authCheck =
-                function () {
-                    $http.get('http://localhost:8189/webshop/auth_check')
-                    .then(
-                        function (response) {
-                            alert(response.data.value);
-                        }
-                    );
-                };
-
             $scope.loadProducts =
                 function () {
-                    $http.get('http://localhost:8189/webshop/api/v1/products')
+                    $http.get('http://localhost:5555/core/api/v1/products')
                     .then(
                         function (response) {
                             $scope.productsList = response.data;
@@ -72,19 +62,29 @@ angular
                     );
                 };
 
-            $scope.showProductInfo =
+//            $scope.showProductInfo =
+//                function (productId) {
+//                    $http.get('http://localhost:5555/webshop-core/api/v1/products/' + productId)
+//                    .then(
+//                        function (response) {
+//                            alert(response.data.title);
+//                        }
+//                    );
+//                };
+
+            $scope.addToCart =
                 function (productId) {
-                    $http.get('http://localhost:8189/webshop/api/v1/products/' + productId)
+                    $http.get('http://localhost:5555/cart/api/v1/cart/add/' + productId)
                     .then(
                         function (response) {
-                            alert(response.data.title);
+                            $scope.loadCart();
                         }
                     );
                 };
 
             $scope.removeFromCart =
                 function (productId) {
-                    $http.get('http://localhost:8190/webshop-cart/api/v1/cart/remove/' + productId)
+                    $http.get('http://localhost:5555/cart/api/v1/cart/remove/' + productId)
                     .then(
                         function (response) {
                             $scope.loadCart();
@@ -94,17 +94,7 @@ angular
 
             $scope.clearCart =
                 function () {
-                    $http.get('http://localhost:8190/webshop-cart/api/v1/cart/clear')
-                    .then(
-                        function (response) {
-                            $scope.loadCart();
-                        }
-                    );
-                };
-
-            $scope.addToCart =
-                function (productId) {
-                    $http.get('http://localhost:8190/webshop-cart/api/v1/cart/add/' + productId)
+                    $http.get('http://localhost:5555/cart/api/v1/cart/clear')
                     .then(
                         function (response) {
                             $scope.loadCart();
@@ -114,7 +104,7 @@ angular
 
             $scope.loadCart =
                 function () {
-                    $http.get('http://localhost:8190/webshop-cart/api/v1/cart')
+                    $http.get('http://localhost:5555/cart/api/v1/cart')
                     .then(
                         function (response) {
                             $scope.cart = response.data;
@@ -124,7 +114,7 @@ angular
 
             $scope.sendOrder =
                 function () {
-                    $http.post('http://localhost:8189/webshop/api/v1/orders')
+                    $http.post('http://localhost:5555/core/api/v1/orders')
                     .then(
                         function (response) {
                             $scope.clearCart();
