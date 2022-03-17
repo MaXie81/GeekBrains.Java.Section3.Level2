@@ -4,18 +4,30 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import shop.api.CartDto;
 
 @Component
 @RequiredArgsConstructor
 public class CartServiceIntegration {
-    private final RestTemplate restTemplate;
+    private final WebClient cartServiceWebClient;
 
-    @Value("${url.cart-service}")
-    private String url;
+    public CartDto getCurrentCart() {
+        return cartServiceWebClient
+                .get()
+                .uri("/api/v1/cart")
+                .retrieve()
+                .bodyToMono(CartDto.class)
+                .block();
+    }
 
-    public CartDto getCart() {
-        return restTemplate.getForObject(url, CartDto.class);
+    public void clear() {
+        cartServiceWebClient
+                .get()
+                .uri("/api/v1/cart/clear")
+                .retrieve()
+                .toBodilessEntity()
+                .block();
     }
 }
 
