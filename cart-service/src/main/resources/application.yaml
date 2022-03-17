@@ -2,5 +2,9 @@ server:
   port: 8190
   servlet:
     context-path: /webshop-cart
-url:
-  core-service: http://localhost:8189/webshop/api/v1/products/
+integrations:
+  product-service:
+    url: http://localhost:8189/webshop-core/
+    connect-timeout: 5000
+    read-timeout: 10000
+    write-timeout: 5000
