@@ -62,6 +62,16 @@ angular
                     );
                 };
 
+            $scope.setFilter =
+                function () {
+                    $http.post('http://localhost:5555/core/api/v1/products/filter', $scope.filter)
+                    .then(
+                        function (response) {
+                            $scope.productsList = response.data;
+                        }
+                    );
+                };
+
 //            $scope.showProductInfo =
 //                function (productId) {
 //                    $http.get('http://localhost:5555/webshop-core/api/v1/products/' + productId)

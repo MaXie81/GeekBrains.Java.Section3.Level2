@@ -2,6 +2,7 @@ package webshop.core.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import shop.api.FilterDto;
 import shop.api.ProductDto;
 import shop.api.ResourceNotFoundException;
 import webshop.core.converters.ProductConverter;
@@ -33,6 +34,15 @@ public class ProductController {
     public ProductDto createNewProduct(@RequestBody ProductDto productDto) {
         Product p = productService.createNewProduct(productDto);
         return productConverter.entityToDto(p);
+    }
+
+    @PostMapping("/filter")
+    public List<ProductDto> createNewProduct(@RequestBody FilterDto filterDto) {
+        System.out.println(filterDto.getTitle());
+        return productService.getAllProductByFilter(filterDto)
+                .stream()
+                .map(productConverter::entityToDto)
+                .collect(Collectors.toList());
     }
 
     @DeleteMapping("/{id}")

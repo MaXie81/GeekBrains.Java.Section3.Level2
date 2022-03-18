@@ -2,6 +2,7 @@ package webshop.core.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import shop.api.FilterDto;
 import shop.api.ProductDto;
 import shop.api.ResourceNotFoundException;
 import webshop.core.entities.Category;
@@ -37,5 +38,9 @@ public class ProductService {
         product.setCategory(category);
         productRepository.save(product);
         return product;
+    }
+
+    public List<Product> getAllProductByFilter(FilterDto filterDto) {
+        return productRepository.getAllProductByFilter(filterDto.getTitle());
     }
 }
