@@ -1,6 +1,7 @@
 package webshop.core.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import shop.api.FilterDto;
 import shop.api.ProductDto;
@@ -11,6 +12,10 @@ import webshop.core.repositories.ProductRepository;
 
 import java.util.List;
 import java.util.Optional;
+
+import static webshop.core.repositories.specifications.ProductSpecification.greaterOrEqualMinPrice;
+import static webshop.core.repositories.specifications.ProductSpecification.lessOrEqualMaxPrice;
+import static webshop.core.repositories.specifications.ProductSpecification.likeByTitle;
 
 @Service
 @RequiredArgsConstructor
@@ -41,9 +46,9 @@ public class ProductService {
     }
 
     public List<Product> getAllProductByFilter(FilterDto filterDto) {
-        System.out.println(filterDto.getTitle() == null ? "NULL" : filterDto.getTitle());
-        System.out.println(filterDto.getMinPrice() == null ? "NULL" : filterDto.getMinPrice());
-        System.out.println(filterDto.getMaxPrice() == null ? "NULL" : filterDto.getMaxPrice());
-        return productRepository.getAllProductByFilter(filterDto.getTitle(), filterDto.getMinPrice(), filterDto.getMaxPrice());
+        Specification<Product> andPoolOfPridicates = likeByTitle(filterDto.getTitle() == null ? "" : filterDto.getTitle());
+        if (filterDto.getMinPrice() != null) andPoolOfPridicates = andPoolOfPridicates.and(greaterOrEqualMinPrice(filterDto.getMinPrice()));
+        if (filterDto.getMaxPrice() != null) andPoolOfPridicates = andPoolOfPridicates.and(lessOrEqualMaxPrice(filterDto.getMaxPrice()));
+        return productRepository.findAll(andPoolOfPridicates);
     }
 }

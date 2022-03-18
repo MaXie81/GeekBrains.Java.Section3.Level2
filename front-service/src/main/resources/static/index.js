@@ -72,16 +72,6 @@ angular
                     );
                 };
 
-//            $scope.showProductInfo =
-//                function (productId) {
-//                    $http.get('http://localhost:5555/webshop-core/api/v1/products/' + productId)
-//                    .then(
-//                        function (response) {
-//                            alert(response.data.title);
-//                        }
-//                    );
-//                };
-
             $scope.addToCart =
                 function (productId) {
                     $http.get('http://localhost:5555/cart/api/v1/cart/add/' + productId)
