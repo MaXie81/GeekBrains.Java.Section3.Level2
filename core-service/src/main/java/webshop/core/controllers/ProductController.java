@@ -38,7 +38,7 @@ public class ProductController {
 
     @PostMapping("/filter")
     public List<ProductDto> createNewProduct(@RequestBody FilterDto filterDto) {
-        System.out.println(filterDto.getTitle());
+        System.out.println(filterDto.getTitle() + "/" + filterDto.getMinPrice() + "/" + filterDto.getMaxPrice());
         return productService.getAllProductByFilter(filterDto)
                 .stream()
                 .map(productConverter::entityToDto)

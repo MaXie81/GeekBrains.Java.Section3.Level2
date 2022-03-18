@@ -41,6 +41,9 @@ public class ProductService {
     }
 
     public List<Product> getAllProductByFilter(FilterDto filterDto) {
-        return productRepository.getAllProductByFilter(filterDto.getTitle());
+        System.out.println(filterDto.getTitle() == null ? "NULL" : filterDto.getTitle());
+        System.out.println(filterDto.getMinPrice() == null ? "NULL" : filterDto.getMinPrice());
+        System.out.println(filterDto.getMaxPrice() == null ? "NULL" : filterDto.getMaxPrice());
+        return productRepository.getAllProductByFilter(filterDto.getTitle(), filterDto.getMinPrice(), filterDto.getMaxPrice());
     }
 }
