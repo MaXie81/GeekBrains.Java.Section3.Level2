@@ -52,19 +52,23 @@ angular
                     }
                 };
 
-            $scope.loadProducts =
-                function () {
-                    $http.get('http://localhost:5555/core/api/v1/products')
-                    .then(
-                        function (response) {
-                            $scope.productsList = response.data;
-                        }
-                    );
-                };
+//            $scope.loadProducts =
+//                function () {
+//                    $http.get('http://localhost:5555/core/api/v1/products')
+//                    .then(
+//                        function (response) {
+//                            $scope.productsList = response.data;
+//                        }
+//                    );
+//                };
 
-            $scope.setFilter =
-                function () {
-                    $http.post('http://localhost:5555/core/api/v1/products/filter', $scope.filter)
+            $scope.loadProducts =
+                function (filter) {
+                    $http.get('http://localhost:5555/core/api/v1/products?p=1'
+                        + (filter.title != null ? '&title=' + filter.title : '')
+                        + (filter.minPrice != null ? '&min_price=' + filter.minPrice : '')
+                        + (filter.maxPrice != null ? '&max_price=' + filter.maxPrice : '')
+                    )
                     .then(
                         function (response) {
                             $scope.productsList = response.data;
@@ -122,7 +126,7 @@ angular
                     );
                 };
 
-            $scope.loadProducts();
+            $scope.loadProducts(0);
             $scope.loadCart();
 
             if ($localStorage.webShopUser) {

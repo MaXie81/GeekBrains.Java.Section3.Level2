@@ -1,16 +1,23 @@
 package webshop.core.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-import shop.api.FilterDto;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import shop.api.ProductDto;
 import shop.api.ResourceNotFoundException;
 import webshop.core.converters.ProductConverter;
 import webshop.core.entities.Product;
 import webshop.core.services.ProductService;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -20,8 +27,17 @@ public class ProductController {
     private final ProductConverter productConverter;
 
     @GetMapping
-    public List<ProductDto> findAllProducts() {
-        return productService.findAll().stream().map(productConverter::entityToDto).collect(Collectors.toList());
+    public List<ProductDto> findProducts(
+            @RequestParam(required = false, name = "min_price") BigDecimal minPrice,
+            @RequestParam(required = false, name = "max_price") BigDecimal maxPrice,
+            @RequestParam(required = false, name = "title") String title,
+            @RequestParam(defaultValue = "1", name = "p") Integer page
+    ) {
+        if (page < 1) {
+            page = 1;
+        }
+        Specification<Product> spec = productService.createSpecByFilters(minPrice, maxPrice, title);
+        return productService.findAll(spec, page - 1).map(productConverter::entityToDto).getContent();
     }
 
     @GetMapping("/{id}")
@@ -34,14 +50,6 @@ public class ProductController {
     public ProductDto createNewProduct(@RequestBody ProductDto productDto) {
         Product p = productService.createNewProduct(productDto);
         return productConverter.entityToDto(p);
-    }
-
-    @PostMapping("/filter")
-    public List<ProductDto> createNewProduct(@RequestBody FilterDto filterDto) {
-        return productService.getAllProductByFilter(filterDto)
-                .stream()
-                .map(productConverter::entityToDto)
-                .collect(Collectors.toList());
     }
 
     @DeleteMapping("/{id}")
