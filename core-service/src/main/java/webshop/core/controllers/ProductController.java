@@ -40,6 +40,16 @@ public class ProductController {
         return productService.findAll(spec, page - 1).map(productConverter::entityToDto).getContent();
     }
 
+    @GetMapping("/total-pages")
+    public Integer getProductPageTotalCount(
+            @RequestParam(required = false, name = "min_price") BigDecimal minPrice,
+            @RequestParam(required = false, name = "max_price") BigDecimal maxPrice,
+            @RequestParam(required = false, name = "title") String title
+    ) {
+        Specification<Product> spec = productService.createSpecByFilters(minPrice, maxPrice, title);
+        return Integer.valueOf(productService.findAll(spec, 0).getTotalPages());
+    }
+
     @GetMapping("/{id}")
     public ProductDto findProductById(@PathVariable Long id) {
         Product p = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Продукт не найден, id: " + id));

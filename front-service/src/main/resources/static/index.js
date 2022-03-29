@@ -52,30 +52,6 @@ angular
                     }
                 };
 
-//            $scope.loadProducts =
-//                function () {
-//                    $http.get('http://localhost:5555/core/api/v1/products')
-//                    .then(
-//                        function (response) {
-//                            $scope.productsList = response.data;
-//                        }
-//                    );
-//                };
-
-            $scope.loadProducts =
-                function (filter) {
-                    $http.get('http://localhost:5555/core/api/v1/products?p=1'
-                        + (filter.title != null ? '&title=' + filter.title : '')
-                        + (filter.minPrice != null ? '&min_price=' + filter.minPrice : '')
-                        + (filter.maxPrice != null ? '&max_price=' + filter.maxPrice : '')
-                    )
-                    .then(
-                        function (response) {
-                            $scope.productsList = response.data;
-                        }
-                    );
-                };
-
             $scope.addToCart =
                 function (productId) {
                     $http.get('http://localhost:5555/cart/api/v1/cart/add/' + productId)
@@ -126,7 +102,86 @@ angular
                     );
                 };
 
-            $scope.loadProducts(0);
+            $scope.getProductPage =
+                function () {
+                    let url = 'http://localhost:5555/core/api/v1/products';
+                    url = url + '?p=' + $scope.page.curr;
+
+                    if ($scope.filter != null) {
+                        if ($scope.filter.title != null) {url = url + '&title=' + $scope.filter.title;}
+                        if ($scope.filter.minPrice != null) {url = url + '&min_price=' + $scope.filter.minPrice;}
+                        if ($scope.filter.maxPrice != null) {url = url + '&max_price=' + $scope.filter.maxPrice;}
+                    }
+
+                    $http.get(url)
+                    .then(
+                        function (response) {
+                            $scope.productsList = response.data;
+                        }
+                    );
+                };
+
+            $scope.getLastPageNumber =
+                function () {
+                    let url = 'http://localhost:5555/core/api/v1/products/total-pages?';
+                    if ($scope.filter != null) {
+                        if ($scope.filter.title != null) {url = url + '&title=' + $scope.filter.title;}
+                        if ($scope.filter.minPrice != null) {url = url + '&min_price=' + $scope.filter.minPrice;}
+                        if ($scope.filter.maxPrice != null) {url = url + '&max_price=' + $scope.filter.maxPrice;}
+                    }
+
+                    $http.get(url)
+                    .then(
+                        function (response) {
+                            $scope.page.last = response.data;
+                            $scope.setPage();
+                        }
+                    );
+                };
+
+            $scope.loadProducts =
+                function () {
+                    $scope.page.curr = 1;
+                    $scope.getProductPage();
+                    $scope.getLastPageNumber();
+                };
+
+            $scope.setProductPage =
+                function (number) {
+                    $scope.page.curr = number;
+                    $scope.getProductPage();
+                    $scope.setPage();
+                };
+
+            $scope.setPage =
+                function () {
+                    let pos = $scope.page.curr;
+
+                    if ($scope.page.last == 1) {
+                        $scope.page.navigate.prev = 1;
+                        $scope.page.navigate.next = 1;
+                    } else if (pos == $scope.page.last) {
+                        $scope.page.navigate.prev = pos - 1;
+                        $scope.page.navigate.next = pos;
+                    } else if (pos == 1) {
+                        $scope.page.navigate.prev = pos;
+                        $scope.page.navigate.next = pos + 1;
+                    } else {
+                        $scope.page.navigate.prev = pos - 1;
+                        $scope.page.navigate.next = pos + 1;
+                    }
+                };
+
+            $scope.page = {
+                "curr" : -1,
+                "last" : -1,
+                "navigate" : {
+                    "prev" : -1,
+                    "next" : -1
+                }
+            };
+
+            $scope.loadProducts();
             $scope.loadCart();
 
             if ($localStorage.webShopUser) {

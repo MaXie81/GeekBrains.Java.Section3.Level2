@@ -67,7 +67,15 @@
         </tbody>
     </table>
     </p>
-    <form class="align-middle" ng-submit="loadProducts(filter)">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#" ng-click="setProductPage(page.navigate.prev)">Previous</a></li>
+            <li class="page-item"><a class="page-link" >{{page.curr}}</a></li>
+            <li class="page-item"><a class="page-link" href="#" ng-click="setProductPage(page.navigate.next)">Next</a></li>
+        </ul>
+    </nav>
+
+    <form class="align-middle" ng-submit="loadProducts()">
         <div class="input-group input-group-sm" style="padding: 4px;">
             <div class="input-group mb-3">
                 <span class="input-group-text">название</span>
@@ -88,7 +96,6 @@
             </div>
         </div>
     </form>
-    <p></p>
     <h3>Корина</h3>
     <table class="table table-hover" cellpadding="0" cellspacing="0">
         <tr>
