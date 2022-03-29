@@ -8,34 +8,42 @@ import webshop.cart.integrations.ProductServiceIntegration;
 import webshop.cart.model.Cart;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
 public class CartService {
     private final ProductServiceIntegration productServiceIntegration;
-    private Cart tempCart;
+    private Cart cart;
+    private HashMap<String, Cart> cartHashMap;
 
     @PostConstruct
     public void init() {
-        tempCart = new Cart();
+        cartHashMap = new HashMap<>();
     }
 
-    public Cart getCurrentCart() {
-        return tempCart;
+    public Cart getCurrentCart(String username) {
+        if(!cartHashMap.containsKey(username)) {
+            cartHashMap.put(username, new Cart());
+        }
+        return cartHashMap.get(username);
     }
 
-    public void add(Long productId) {
+    public void add(Long productId, String username) {
+        cart = getCurrentCart(username);
         ProductDto product = productServiceIntegration
                 .getProductById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Не удается добавить продукт с id: " + productId + " в корзину. Продукт не найден"));
-        tempCart.add(product);
+        cart.add(product);
     }
 
-    public void remove(Long productId) {
-        tempCart.remove(productId);
+    public void remove(Long productId, String username) {
+        cart = getCurrentCart(username);
+        cart.remove(productId);
     }
 
-    public void clear() {
-        tempCart.clear();
+    public void clear(String username) {
+        cart = getCurrentCart(username);
+        cart.clear();
     }
 }

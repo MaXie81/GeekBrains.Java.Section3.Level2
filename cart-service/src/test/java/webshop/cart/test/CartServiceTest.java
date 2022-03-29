@@ -10,7 +10,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import shop.api.ProductDto;
 import webshop.cart.integrations.ProductServiceIntegration;
 import webshop.cart.model.Cart;
-import webshop.cart.model.CartItem;
 import webshop.cart.services.CartService;
 
 import java.math.BigDecimal;
@@ -26,12 +25,12 @@ public class CartServiceTest {
 
     @BeforeEach
     public void clear() {
-        cartService.clear();
+        cartService.clear(null);
     }
 
     @Test
     public void all() {
-        Cart cart = cartService.getCurrentCart();
+        Cart cart = cartService.getCurrentCart(null);
 
         ProductDto productDto1 = new ProductDto();
         productDto1.setId(1L);
@@ -55,10 +54,10 @@ public class CartServiceTest {
         Mockito.doReturn(Optional.of(productDto2)).when(productServiceIntegration).getProductById(2L);
         Mockito.doReturn(Optional.of(productDto3)).when(productServiceIntegration).getProductById(3L);
 
-        cartService.add(1L);
-        cartService.add(2L);
-        cartService.add(3L);
-        cartService.add(2L);
+        cartService.add(1L, null);
+        cartService.add(2L, null);
+        cartService.add(3L, null);
+        cartService.add(2L, null);
 
         Assertions.assertEquals(3, cart.getItems().size());
         Assertions.assertEquals(BigDecimal.valueOf(102.43), cart.getTotalPrice());
@@ -68,7 +67,7 @@ public class CartServiceTest {
                 .get()
         );
 
-        cartService.remove(2L);
+        cartService.remove(2L, null);
 
         Assertions.assertEquals(2, cart.getItems().size());
         Assertions.assertEquals(2, cart.getItems().stream()
@@ -77,7 +76,7 @@ public class CartServiceTest {
                 .get()
         );
 
-        cartService.clear();
+        cartService.clear(null);
 
         Assertions.assertEquals(0, cart.getItems().size());
     }
