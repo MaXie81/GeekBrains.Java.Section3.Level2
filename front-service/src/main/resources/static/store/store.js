@@ -89,8 +89,9 @@ angular.module('market').controller('storeController', function ($scope, $http, 
     }
 
     $scope.addToCart = function (productId) {
-        $http.get(cartContextPath + 'api/v1/cart/add/' + productId).then(function (response) {
-            $scope.loadCart();
+        console.log("webShopGuestCartId: " + $localStorage.webShopGuestCartId);
+        $http.get(cartContextPath + 'api/v1/cart/' + $localStorage.webShopGuestCartId + '/add/' + productId).then(function (response) {
+//            $scope.loadCart();
         });
     }
 

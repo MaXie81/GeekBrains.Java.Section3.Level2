@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import shop.api.CartDto;
+import shop.api.StringResponse;
 import webshop.cart.convertes.CartConverter;
 import webshop.cart.services.CartService;
 
-import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/cart")
@@ -19,23 +20,39 @@ public class CartController {
     private final CartService cartService;
     private final CartConverter cartConverter;
 
-    @GetMapping("/add/{id}")
-    public void addToCart(@PathVariable Long id, @RequestHeader(required = false) String username) {
-        cartService.add(id, Optional.ofNullable(username).orElse(""));
+    @GetMapping("/generate_uuid")
+    public StringResponse generateUuid() {
+        return new StringResponse(UUID.randomUUID().toString());
     }
 
-    @GetMapping("/clear")
-    public void clearCart(@RequestHeader(required = false) String username) {
-        cartService.clear(Optional.ofNullable(username).orElse(""));
+    @GetMapping("/{uuid}/add/{id}")
+    public void addToCart(@RequestHeader(name = "username", required = false) String username, @PathVariable String uuid, @PathVariable Long id) {
+        String targetUuid = getCartUuid(username, uuid);
+        cartService.add(targetUuid, id);
     }
 
-    @GetMapping("/remove/{id}")
-    public void removeFromCart(@PathVariable Long id, @RequestHeader(required = false) String username) {
-        cartService.remove(id, Optional.ofNullable(username).orElse(""));
+    @GetMapping("/{uuid}/clear")
+    public void clearCart(@RequestHeader(name = "username", required = false) String username, @PathVariable String uuid) {
+        String targetUuid = getCartUuid(username, uuid);
+        cartService.clear(targetUuid);
     }
 
-    @GetMapping
-    public CartDto getCurrentCart(@RequestHeader(required = false) String username) {
-        return cartConverter.entityToDto(cartService.getCurrentCart(Optional.ofNullable(username).orElse("")));
+    @GetMapping("/{uuid}/remove/{id}")
+    public void removeFromCart(@RequestHeader(name = "username", required = false) String username, @PathVariable String uuid, @PathVariable Long id) {
+        String targetUuid = getCartUuid(username, uuid);
+        cartService.remove(targetUuid, id);
+    }
+
+    @GetMapping("/{uuid}")
+    public CartDto getCurrentCart(@RequestHeader(name = "username", required = false) String username, @PathVariable String uuid) {
+        String targetUuid = getCartUuid(username, uuid);
+        return cartConverter.entityToDto(cartService.getCurrentCart(targetUuid));
+    }
+
+    private String getCartUuid(String username, String uuid) {
+        if (username != null) {
+            return username;
+        }
+        return uuid;
     }
 }

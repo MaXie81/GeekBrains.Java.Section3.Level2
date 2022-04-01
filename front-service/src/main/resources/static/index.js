@@ -24,20 +24,27 @@
     }
 
     function run($rootScope, $http, $localStorage) {
-        if ($localStorage.winterMarketUser) {
+        if ($localStorage.webShopUser) {
             try {
-                let jwt = $localStorage.winterMarketUser.token;
+                let jwt = $localStorage.webShopUser.token;
                 let payload = JSON.parse(atob(jwt.split('.')[1]));
                 let currentTime = parseInt(new Date().getTime() / 1000);
                 if (currentTime > payload.exp) {
                     console.log("Token is expired!!!");
-                    delete $localStorage.winterMarketUser;
+                    delete $localStorage.webShopUser;
                     $http.defaults.headers.common.Authorization = '';
                 }
             } catch (e) {
             }
 
-            $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.winterMarketUser.token;
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.webShopUser.token;
+        }
+
+        if (!$localStorage.webShopGuestCartId) {
+            $http.get('http://localhost:5555/cart/api/v1/cart/generate_uuid')
+                .then(function successCallback(response) {
+                    $localStorage.webShopGuestCartId = response.data.value;
+                });
         }
     }
 })();
@@ -48,7 +55,7 @@ angular.module('market').controller('indexController', function ($rootScope, $sc
             .then(function successCallback(response) {
                 if (response.data.token) {
                     $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
-                    $localStorage.winterMarketUser = {username: $scope.user.username, token: response.data.token};
+                    $localStorage.webShopUser = {username: $scope.user.username, token: response.data.token};
 
                     $scope.user.username = null;
                     $scope.user.password = null;
@@ -66,12 +73,12 @@ angular.module('market').controller('indexController', function ($rootScope, $sc
     };
 
     $scope.clearUser = function () {
-        delete $localStorage.winterMarketUser;
+        delete $localStorage.webShopUser;
         $http.defaults.headers.common.Authorization = '';
     };
 
     $rootScope.isUserLoggedIn = function () {
-        if ($localStorage.winterMarketUser) {
+        if ($localStorage.webShopUser) {
             return true;
         } else {
             return false;

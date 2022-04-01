@@ -8,16 +8,13 @@ import reactor.core.publisher.Mono;
 import shop.api.ProductDto;
 import shop.api.ResourceNotFoundException;
 
-import java.util.Optional;
-
 @Component
 @RequiredArgsConstructor
 public class ProductServiceIntegration {
     private final WebClient productServiceWebClient;
 
-    public Optional<ProductDto> getProductById(Long id) {
-        return Optional.of(productServiceWebClient
-                .get()
+    public ProductDto getProductById(Long id) {
+        return productServiceWebClient.get()
                 .uri("/api/v1/products/" + id)
                 .retrieve()
                 .onStatus(
@@ -25,7 +22,6 @@ public class ProductServiceIntegration {
                         clientResponse -> Mono.error(new ResourceNotFoundException("Товар не найден в продуктовом МС"))
                 )
                 .bodyToMono(ProductDto.class)
-                .block()
-        );
+                .block();
     }
 }

@@ -54,10 +54,10 @@ public class CartServiceTest {
         Mockito.doReturn(Optional.of(productDto2)).when(productServiceIntegration).getProductById(2L);
         Mockito.doReturn(Optional.of(productDto3)).when(productServiceIntegration).getProductById(3L);
 
-        cartService.add(1L, null);
-        cartService.add(2L, null);
-        cartService.add(3L, null);
-        cartService.add(2L, null);
+        cartService.add("0", 1L);
+        cartService.add("0", 2L);
+        cartService.add("0", 3L);
+        cartService.add("0", 2L);
 
         Assertions.assertEquals(3, cart.getItems().size());
         Assertions.assertEquals(BigDecimal.valueOf(102.43), cart.getTotalPrice());
@@ -67,7 +67,7 @@ public class CartServiceTest {
                 .get()
         );
 
-        cartService.remove(2L, null);
+        cartService.remove("0", 2L);
 
         Assertions.assertEquals(2, cart.getItems().size());
         Assertions.assertEquals(2, cart.getItems().stream()
