@@ -1,7 +1,7 @@
 package webshop.core.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import shop.api.CartDto;
 import webshop.core.entities.Order;
@@ -12,7 +12,7 @@ import webshop.core.repositories.OrderRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class OrderService {
     private final ProductService productService;
