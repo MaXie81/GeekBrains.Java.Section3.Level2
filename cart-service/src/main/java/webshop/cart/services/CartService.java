@@ -40,6 +40,17 @@ public class CartService {
         execute(uuid, Cart::clear);
     }
 
+    public void mergeCurrentCart(String uuid, String username) {
+        Cart cartUuid = getCurrentCart(uuid);
+        Cart cartUsername = getCurrentCart(username);
+
+        cartUuid.getItems().stream().forEach(cartItem -> cartUsername.addItem(cartItem));
+        cartUuid.clear();
+
+        redisTemplate.opsForValue().set(cartPrefix + uuid, cartUuid);
+        redisTemplate.opsForValue().set(cartPrefix + username, cartUsername);
+    }
+
     private void execute(String uuid, Consumer<Cart> operation) {
         Cart cart = getCurrentCart(uuid);
         operation.accept(cart);

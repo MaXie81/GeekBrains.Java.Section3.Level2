@@ -65,6 +65,8 @@ angular.module('market').controller('indexController', function ($rootScope, $sc
                     $scope.user.password = null;
 
                     $location.path('/');
+
+                    $scope.mergeCart();
                 }
             }, function errorCallback(response) {
             });
@@ -88,4 +90,11 @@ angular.module('market').controller('indexController', function ($rootScope, $sc
             return false;
         }
     };
+
+    $scope.mergeCart = function () {
+        $http.get('http://localhost:5555/cart/api/v1/cart/merge/' + $localStorage.webShopGuestCartId)
+        .then(
+            function (response) {}
+        );
+    }
 });

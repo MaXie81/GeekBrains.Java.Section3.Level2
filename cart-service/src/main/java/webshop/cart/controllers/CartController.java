@@ -1,11 +1,7 @@
 package webshop.cart.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import shop.api.CartDto;
 import shop.api.StringResponse;
 import webshop.cart.convertes.CartConverter;
@@ -47,6 +43,11 @@ public class CartController {
     public CartDto getCurrentCart(@RequestHeader(name = "username", required = false) String username, @PathVariable String uuid) {
         String targetUuid = getCartUuid(username, uuid);
         return cartConverter.entityToDto(cartService.getCurrentCart(targetUuid));
+    }
+
+    @GetMapping("/merge/{uuid}")
+    public void mergeCurrentCart(@RequestHeader(name = "username", required = true) String username, @PathVariable String uuid) {
+        cartService.mergeCurrentCart(uuid, username);
     }
 
     private String getCartUuid(String username, String uuid) {

@@ -29,6 +29,21 @@ public class Cart {
         recalculate();
     }
 
+    public void addItem(CartItem item) {
+        CartItem cartItem = items.stream()
+                .filter(i -> i.getProductId().equals(item.getProductId()))
+                .findFirst()
+                .orElse(null);
+
+        if (cartItem == null) {
+            items.add(item);
+        } else {
+            cartItem.setQuantity(cartItem.getQuantity() + item.getQuantity());
+            cartItem.setPrice(cartItem.getPrice().add(item.getPrice()));
+        }
+        recalculate();
+    }
+
     public void remove(Long productId) {
         if (items.removeIf(item -> item.getProductId().equals(productId))) {
             recalculate();
