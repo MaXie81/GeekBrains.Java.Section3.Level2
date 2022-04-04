@@ -1,5 +1,10 @@
 package webshop.core.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,10 +28,20 @@ import java.math.BigDecimal;
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
+@Tag(name = "Продукты", description = "Методы работы с продуктами")
 public class ProductController {
     private final ProductService productService;
     private final ProductConverter productConverter;
 
+    @Operation(
+            summary = "Запрос на получение отфильтрованного списка продуктов",
+            responses = {
+                    @ApiResponse(
+                            description = "Успешный ответ", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = PageDto.class))
+                    )
+            }
+    )
     @GetMapping
     public PageDto<ProductDto> findProducts(
             @RequestParam(required = false, name = "min_price") BigDecimal minPrice,
