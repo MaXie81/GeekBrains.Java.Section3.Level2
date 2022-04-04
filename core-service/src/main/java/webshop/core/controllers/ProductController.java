@@ -1,6 +1,7 @@
 package webshop.core.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import shop.api.PageDto;
 import shop.api.ProductDto;
 import shop.api.ResourceNotFoundException;
 import webshop.core.converters.ProductConverter;
@@ -17,7 +19,6 @@ import webshop.core.entities.Product;
 import webshop.core.services.ProductService;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -27,7 +28,7 @@ public class ProductController {
     private final ProductConverter productConverter;
 
     @GetMapping
-    public List<ProductDto> findProducts(
+    public PageDto<ProductDto> findProducts(
             @RequestParam(required = false, name = "min_price") BigDecimal minPrice,
             @RequestParam(required = false, name = "max_price") BigDecimal maxPrice,
             @RequestParam(required = false, name = "title") String title,
@@ -37,17 +38,13 @@ public class ProductController {
             page = 1;
         }
         Specification<Product> spec = productService.createSpecByFilters(minPrice, maxPrice, title);
-        return productService.findAll(spec, page - 1).map(productConverter::entityToDto).getContent();
-    }
+        Page<ProductDto> jpaPage = productService.findAll(spec, page - 1).map(productConverter::entityToDto);
 
-    @GetMapping("/total-pages")
-    public Integer getProductPageTotalCount(
-            @RequestParam(required = false, name = "min_price") BigDecimal minPrice,
-            @RequestParam(required = false, name = "max_price") BigDecimal maxPrice,
-            @RequestParam(required = false, name = "title") String title
-    ) {
-        Specification<Product> spec = productService.createSpecByFilters(minPrice, maxPrice, title);
-        return Integer.valueOf(productService.findAll(spec, 0).getTotalPages());
+        PageDto<ProductDto> out = new PageDto<>();
+        out.setPage(jpaPage.getNumber());
+        out.setItems(jpaPage.getContent());
+        out.setTotalPages(jpaPage.getTotalPages());
+        return out;
     }
 
     @GetMapping("/{id}")

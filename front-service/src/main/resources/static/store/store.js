@@ -2,10 +2,10 @@ angular.module('market').controller('storeController', function ($scope, $http, 
     const contextPath = 'http://localhost:5555/core/';
     const cartContextPath = 'http://localhost:5555/cart/';
 
-    $scope.getProductPage =
-        function () {
+    $scope.loadProducts =
+        function (pageNumber = $scope.page.curr) {
             let url = contextPath + 'api/v1/products';
-            url = url + '?p=' + $scope.page.curr;
+            url = url + '?p=' + pageNumber;
 
             if ($scope.filter != null) {
                 if ($scope.filter.title != null) {url = url + '&title=' + $scope.filter.title;}
@@ -16,43 +16,13 @@ angular.module('market').controller('storeController', function ($scope, $http, 
             $http.get(url)
             .then(
                 function (response) {
-                    $scope.productsList = response.data;
-                }
-            );
-        }
-
-    $scope.getLastPageNumber =
-        function () {
-            let url = contextPath + 'api/v1/products/total-pages?';
-
-            if ($scope.filter != null) {
-                if ($scope.filter.title != null) {url = url + '&title=' + $scope.filter.title;}
-                if ($scope.filter.minPrice != null) {url = url + '&min_price=' + $scope.filter.minPrice;}
-                if ($scope.filter.maxPrice != null) {url = url + '&max_price=' + $scope.filter.maxPrice;}
-            }
-
-            $http.get(url)
-            .then(
-                function (response) {
-                    $scope.page.last = response.data;
+                    $scope.productsList = response.data.items;
+                    $scope.page.curr = response.data.page + 1;
+                    $scope.page.last = response.data.totalPages;
                     $scope.setPage();
                 }
             );
         }
-
-    $scope.loadProducts =
-        function () {
-            $scope.page.curr = 1;
-            $scope.getProductPage();
-            $scope.getLastPageNumber();
-        }
-
-    $scope.setProductPage =
-        function (number) {
-            $scope.page.curr = number;
-            $scope.getProductPage();
-            $scope.setPage();
-        };
 
     $scope.setPage =
         function () {
@@ -74,7 +44,7 @@ angular.module('market').controller('storeController', function ($scope, $http, 
         };
 
     $scope.page = {
-        "curr" : -1,
+        "curr" : 1,
         "last" : -1,
         "navigate" : {
             "prev" : -1,
@@ -91,7 +61,6 @@ angular.module('market').controller('storeController', function ($scope, $http, 
     $scope.addToCart = function (productId) {
         console.log("webShopGuestCartId: " + $localStorage.webShopGuestCartId);
         $http.get(cartContextPath + 'api/v1/cart/' + $localStorage.webShopGuestCartId + '/add/' + productId).then(function (response) {
-//            $scope.loadCart();
         });
     }
 
