@@ -1,7 +1,12 @@
 package shop.api;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Ошибка")
 public class AppError {
+    @Schema(description = "Код", required = true, example = "404")
     private int statusCode;
+    @Schema(description = "Текст", required = true, example = "Продукт не найден, id: 500")
     private String message;
 
     public int getStatusCode() {

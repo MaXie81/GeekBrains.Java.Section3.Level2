@@ -1,6 +1,7 @@
 package webshop.core.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -8,14 +9,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import shop.api.AppError;
 import shop.api.PageDto;
 import shop.api.ProductDto;
 import shop.api.ResourceNotFoundException;
@@ -34,20 +30,20 @@ public class ProductController {
     private final ProductConverter productConverter;
 
     @Operation(
-            summary = "Запрос на получение отфильтрованного списка продуктов",
+            summary = "Запрос на получение отфильтрованного списка продуктов с разбиением на страницы",
             responses = {
                     @ApiResponse(
-                            description = "Успешный ответ", responseCode = "200",
+                            description = "Страница сформирована", responseCode = "200",
                             content = @Content(schema = @Schema(implementation = PageDto.class))
                     )
             }
     )
     @GetMapping
     public PageDto<ProductDto> findProducts(
-            @RequestParam(required = false, name = "min_price") BigDecimal minPrice,
-            @RequestParam(required = false, name = "max_price") BigDecimal maxPrice,
-            @RequestParam(required = false, name = "title") String title,
-            @RequestParam(defaultValue = "1", name = "p") Integer page
+            @RequestParam(required = false, name = "min_price") @Parameter(description = "Фильтр, минимальная цена", required = false) BigDecimal minPrice,
+            @RequestParam(required = false, name = "max_price") @Parameter(description = "Фильтр, максимальная цена", required = false) BigDecimal maxPrice,
+            @RequestParam(required = false, name = "title") @Parameter(description = "Фильтр, символьная последовательность в имени", required = false) String title,
+            @RequestParam(defaultValue = "1", name = "p") @Parameter(description = "Номер страницы", required = true) Integer page
     ) {
         if (page < 1) {
             page = 1;
@@ -62,20 +58,51 @@ public class ProductController {
         return out;
     }
 
+    @Operation(
+            summary = "Запрос на получение продукта по его идентификатору(ID)",
+            responses = {
+                    @ApiResponse(
+                            description = "Продукт найден", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = ProductDto.class))
+                    ),
+                    @ApiResponse(
+                            description = "Продукт не найден", responseCode = "404",
+                            content = @Content(schema = @Schema(implementation = AppError.class))
+                    )
+            }
+    )
     @GetMapping("/{id}")
-    public ProductDto findProductById(@PathVariable Long id) {
+    public ProductDto findProductById(@PathVariable @Parameter(description = "Идентификатор", required = true) Long id) {
         Product p = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Продукт не найден, id: " + id));
         return productConverter.entityToDto(p);
     }
 
+    @Operation(
+            summary = "Запрос на создание продукта",
+            responses = {
+                    @ApiResponse(
+                            description = "Продукт создан", responseCode = "201",
+                            content = @Content(schema = @Schema(implementation = ProductDto.class))
+                    )
+            }
+    )
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ProductDto createNewProduct(@RequestBody ProductDto productDto) {
         Product p = productService.createNewProduct(productDto);
         return productConverter.entityToDto(p);
     }
 
+    @Operation(
+            summary = "Запрос на удаление продукта по его идентификатору(ID)",
+            responses = {
+                    @ApiResponse(
+                            description = "Продукт удален", responseCode = "200"
+                    )
+            }
+    )
     @DeleteMapping("/{id}")
-    public void deleteProductById(@PathVariable Long id) {
+    public void deleteProductById(@PathVariable @Parameter(description = "Идентификатор", required = true) Long id) {
         productService.deleteById(id);
     }
 }

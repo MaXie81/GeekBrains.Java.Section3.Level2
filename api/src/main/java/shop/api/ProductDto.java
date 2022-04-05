@@ -1,11 +1,18 @@
 package shop.api;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.math.BigDecimal;
 
+@Schema(description = "Продукт(DTO)")
 public class ProductDto {
+    @Schema(description = "Идентификатор", required = true, example = "1")
     private Long id;
+    @Schema(description = "Наименование", required = true, minLength = 3, example = "Молоко")
     private String title;
+    @Schema(description = "Цена", required = true, example = "50.36")
     private BigDecimal price;
+    @Schema(description = "Категория", required = true, minLength = 3, example = "Молочные изделия")
     private String categoryTitle;
 
     public Long getId() {
