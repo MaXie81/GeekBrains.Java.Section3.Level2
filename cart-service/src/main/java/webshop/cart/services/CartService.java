@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import shop.api.ProductDto;
 import webshop.cart.integrations.ProductServiceIntegration;
 import webshop.cart.model.Cart;
 
@@ -28,8 +27,7 @@ public class CartService {
     }
 
     public void add(String uuid, Long productId) {
-        ProductDto product = productServiceIntegration.getProductById(productId);
-        execute(uuid, cart -> cart.add(product));
+        execute(uuid, cart -> cart.add(productId, productServiceIntegration::getProductById));
     }
 
     public void remove(String uuid, Long productId) {

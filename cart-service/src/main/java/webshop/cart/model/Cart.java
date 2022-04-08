@@ -17,14 +17,15 @@ public class Cart {
         this.items = new ArrayList<>();
     }
 
-    public void add(ProductDto product) {
+    public void add(Long productId, ProductDtoById productDto) {
         for (CartItem item : items) {
-            if (product.getId().equals(item.getProductId())) {
+            if (productId.equals(item.getProductId())) {
                 item.changeQuantity(1);
                 recalculate();
                 return;
             }
         }
+        ProductDto product = productDto.get(productId);
         items.add(new CartItem(product.getId(), product.getTitle(), 1, product.getPrice(), product.getPrice()));
         recalculate();
     }
