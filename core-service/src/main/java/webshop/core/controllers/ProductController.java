@@ -105,4 +105,15 @@ public class ProductController {
     public void deleteProductById(@PathVariable @Parameter(description = "Идентификатор", required = true) Long id) {
         productService.deleteById(id);
     }
+
+    @GetMapping("/admin")
+    public String getAdminCheck(@RequestHeader(name = "user-roles", required = false) String userRoles) {
+        String response;
+        if (userRoles.equals("[ROLE_ADMIN]")) {
+            response = "{\"value\" : \"admin\"}";
+        } else {
+            response = "{}";
+        }
+        return response;
+    }
 }

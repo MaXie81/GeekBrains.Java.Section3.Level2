@@ -97,4 +97,10 @@ angular.module('market').controller('indexController', function ($rootScope, $sc
             function (response) {}
         );
     }
+
+    $scope.getAdmin = function () {
+            $http.get('http://localhost:5555/core/api/v1/products/admin')
+            .then(function (response) {}
+            );
+        }
 });
