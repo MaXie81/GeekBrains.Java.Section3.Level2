@@ -22,7 +22,7 @@ public class CartController {
     }
 
     @GetMapping("/{uuid}/add/{id}")
-    public void addToCart(@RequestHeader(name = "username", required = false) String username, @PathVariable String uuid, @PathVariable Long id) {
+    public void addToCart(@RequestHeader(name = "username", required = false) String username, @RequestHeader(name = "user-roles", required = false) String userRoles, @PathVariable String uuid, @PathVariable Long id) {
         String targetUuid = getCartUuid(username, uuid);
         cartService.add(targetUuid, id);
     }
